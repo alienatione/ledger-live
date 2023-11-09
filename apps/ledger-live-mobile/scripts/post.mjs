@@ -68,15 +68,13 @@ function runHashChecks(writeCache = false) {
 
   const cache = getCache(cachePath);
 
-  if (!cache) {
-    if (writeCache) {
-      try {
-        const data = JSON.stringify(result);
-        writeFileSync(cachePath, data);
-      } catch (error) {
-        echo(chal.red(error));
-        return false;
-      }
+  if (!cache || writeCache) {
+    try {
+      const data = JSON.stringify(result);
+      writeFileSync(cachePath, data);
+    } catch (error) {
+      echo(chal.red(error));
+      return false;
     }
 
     return false;
@@ -130,6 +128,11 @@ BRAZE_CUSTOM_ENDPOINT="sdk.fra-02.braze.eu"`;
   let hashesAreEquals = false;
   try {
     hashesAreEquals = runHashChecks();
+    if (hashesAreEquals) {
+      echo(chalk.green("Pods hashes are equal, skipping Pods install"));
+    } else {
+      echo(chalk.yellow("Pods hashes are not in sync, installing Pods"));
+    }
   } catch (error) {
     echo(chalk.red(error));
   }

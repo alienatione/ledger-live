@@ -102,6 +102,7 @@ export type CurrencyFeatures = {
   currencySecretNetwork: DefaultFeature;
   currencySeiNetwork: DefaultFeature;
   currencyDesmos: DefaultFeature;
+  currencyDydx: DefaultFeature;
   currencyUmee: DefaultFeature;
   currencyStargaze: DefaultFeature;
   currencyOnomy: DefaultFeature;
@@ -116,6 +117,8 @@ export type CurrencyFeatures = {
   currencyBase: DefaultFeature;
   currencyBaseGoerli: DefaultFeature;
   currencyKlaytn: DefaultFeature;
+  currencyCasper: DefaultFeature;
+  currencyNeonEvm: DefaultFeature;
 };
 
 /**
@@ -173,7 +176,7 @@ export type Features = CurrencyFeatures & {
   discover: Feature_Discover;
   protectServicesDiscoverDesktop: Feature_ProtectServicesDiscoverDesktop;
   transactionsAlerts: Feature_TransactionsAlerts;
-  listAppsV2: Feature_ListAppsV2;
+  listAppsV2minor1: Feature_ListAppsV2minor1;
   llmWalletQuickActions: Feature_LlmWalletQuickActions;
   cexDepositEntryPointsDesktop: Feature_CexDepositEntryPointsDesktop;
   cexDepositEntryPointsMobile: Feature_CexDepositEntryPointsMobile;
@@ -296,8 +299,15 @@ export type Feature_NewsfeedPage = Feature<{
   whitelistedLocales: string[];
 }>;
 
+export type CompatibleDevice = {
+  available: boolean;
+  comingSoon: boolean;
+  name: string;
+};
+
 export type Feature_ProtectServicesMobile = Feature<{
   deeplink: string;
+  compatibleDevices: CompatibleDevice[];
   onboardingRestore: {
     restoreInfoDrawer: {
       enabled: boolean;
@@ -325,6 +335,7 @@ export type Feature_ProtectServicesDesktop = Feature<{
   availableOnDesktop: boolean;
   openRecoverFromSidebar: boolean;
   discoverTheBenefitsLink: string;
+  compatibleDevices: CompatibleDevice[];
   onboardingRestore: {
     restoreInfoDrawer: {
       enabled: boolean;
@@ -335,7 +346,9 @@ export type Feature_ProtectServicesDesktop = Feature<{
   };
   onboardingCompleted: {
     upsellURI: string;
+    restore24URI: string;
     alreadySubscribedURI: string;
+    alreadyDeviceSeededURI: string;
   };
   account: {
     homeURI: string;
@@ -447,6 +460,10 @@ export type Feature_PtxSwapLiveApp = Feature<{
   families?: Array<string>;
 }>;
 
+export type Feature_FetchAdditionalCoins = Feature<{
+  batch: number;
+}>;
+
 export type Feature_LlmNewFirmwareUpdateUx = DefaultFeature;
 export type Feature_CounterValue = DefaultFeature;
 export type Feature_MockFeature = DefaultFeature;
@@ -467,11 +484,10 @@ export type Feature_PortfolioExchangeBanner = DefaultFeature;
 export type Feature_Objkt = DefaultFeature;
 export type Feature_EditEthTx = DefaultFeature;
 export type Feature_ProtectServicesDiscoverDesktop = DefaultFeature;
-export type Feature_ListAppsV2 = DefaultFeature;
+export type Feature_ListAppsV2minor1 = DefaultFeature;
 export type Feature_BrazeLearn = DefaultFeature;
 export type Feature_LlmNewDeviceSelection = DefaultFeature;
 export type Feature_LlmWalletQuickActions = DefaultFeature;
-export type Feature_FetchAdditionalCoins = DefaultFeature;
 
 /**
  * Utils types.
