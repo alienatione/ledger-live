@@ -18,7 +18,7 @@ class UnableToLoadSwapLiveError extends Error {
     const name = "UnableToLoadSwapLiveError";
     super(message || name);
     this.name = name;
-    this.message = message
+    this.message = message;
   }
 }
 
@@ -34,23 +34,33 @@ const Swap = () => {
   const params = location.state || {};
 
   const handleCrash = useDebounce(() => {
-    console.log('[swap web player] Unable to load live app', {
+    console.log("[swap web player] Unable to load live app", {
       shouldLogAsSentryException: true,
       shouldGoBack: true,
-    })
-    captureException(new UnableToLoadSwapLiveError('Failed to load swap live app using WebPlatformPlayer in SwapWeb'))
+    });
+    captureException(
+      new UnableToLoadSwapLiveError(
+        "Failed to load swap live app using WebPlatformPlayer in SwapWeb",
+      ),
+    );
+    /**
+     * TODO:
+     * Should redirect back to the Swap2/Form,
+     * with a parameter to indicate swap live app not available,
+     * then fall back to use native swap flow.
+     */
     history.goBack();
-  }, 500)
+  }, 500);
 
-  const onStateChange: WebviewProps['onStateChange'] = (state) => {
-    console.log('[swap web player] state changed', {
+  const onStateChange: WebviewProps["onStateChange"] = state => {
+    console.log("[swap web player] state changed", {
       loading: state.loading,
-      isAppUnavailable: state.isAppUnavailable
+      isAppUnavailable: state.isAppUnavailable,
     });
     if (!state.loading && state.isAppUnavailable) {
       handleCrash?.();
     }
-  }
+  };
 
   return (
     // TODO: Remove @ts-ignore after Card component be compatible with TS

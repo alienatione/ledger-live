@@ -40,10 +40,10 @@ export default function WebPlatformPlayer({ manifest, inputs, onClose, config, .
     };
   }, []);
 
-  const onStateChange: WebviewProps['onStateChange'] = (state) => {
-    setWebviewState(state)
-    props.onStateChange?.(state)
-  }
+  const onStateChange: WebviewProps["onStateChange"] = state => {
+    setWebviewState(state);
+    props.onStateChange?.(state);
+  };
 
   return (
     <Container>
