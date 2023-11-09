@@ -97,7 +97,7 @@ const SwapForm = () => {
     timeoutErrorMessage: t("swap2.form.timeout.message"),
   });
 
-  const isSwapLiveAppEnabled = useIsSwapLiveApp({
+  const swapLiveAppFeature = useIsSwapLiveApp({
     currencyFrom: swapTransaction.swap.from.currency,
     swapWebManifestId: SWAP_WEB_MANIFEST_ID,
   });
@@ -282,7 +282,7 @@ const SwapForm = () => {
   };
 
   useEffect(() => {
-    if (isSwapLiveAppEnabled) {
+    if (swapLiveAppFeature.enabled) {
       const { swap } = swapTransaction;
       const { to, from } = swap;
       const transaction = swapTransaction.transaction;
@@ -322,7 +322,7 @@ const SwapForm = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    isSwapLiveAppEnabled,
+    swapLiveAppFeature.enabled,
     provider,
     swapTransaction.swap.from.account?.id,
     swapTransaction.swap.to.currency?.id,
@@ -376,8 +376,12 @@ const SwapForm = () => {
         </>
       )}
 
-      {isSwapLiveAppEnabled ? (
-        <SwapWebView redirectToProviderApp={redirectToProviderApp} swapState={swapWebProps} />
+      {swapLiveAppFeature.enabled ? (
+        <SwapWebView
+          swapState={swapWebProps}
+          onRedirectToProviderApp={redirectToProviderApp}
+          onLiveAppUnavailable={swapLiveAppFeature.onLiveAppCrashed}
+        />
       ) : (
         <Box>
           <Button primary disabled={!isSwapReady} onClick={onSubmit} data-test-id="exchange-button">
