@@ -182,12 +182,12 @@ export const withDevice =
       const previousQueuedJob = queuedJobManager.getLastQueuedJob(deviceId);
 
       // When the new job is finished, this will unlock the associated device queue of jobs
-      let unlockQueuedJob;
+      let resolveQueuedJob;
 
       const jobId = queuedJobManager.setLastQueuedJob(
         deviceId,
         new Promise(resolve => {
-          unlockQueuedJob = resolve;
+          resolveQueuedJob = resolve;
         }),
       );
 
@@ -227,7 +227,7 @@ export const withDevice =
           if (unsubscribed) {
             tracer.trace("Unsubscribed (1) while processing job");
             // It was unsubscribed prematurely
-            return finalize(transport, [unlockQueuedJob]);
+            return finalize(transport, [resolveQueuedJob]);
           }
           setAllowAutoDisconnect(transport, deviceId, false);
 
@@ -241,7 +241,7 @@ export const withDevice =
         // This catch is here only for errors that might happen at open or at clean up of the transport before doing the job
         .catch(e => {
           tracer.trace(`Error while opening Transport: ${e}`, { error: e });
-          unlockQueuedJob();
+          resolveQueuedJob();
           if (e instanceof BluetoothRequired) throw e;
           if (e instanceof TransportWebUSBGestureRequired) throw e;
           if (e instanceof TransportInterfaceNotAvailable) throw e;
@@ -257,7 +257,7 @@ export const withDevice =
           // It was unsubscribed prematurely
           if (unsubscribed) {
             tracer.trace("Unsubscribed (2) while processing job");
-            return finalize(transport, [unlockQueuedJob]);
+            return finalize(transport, [resolveQueuedJob]);
           }
 
           sub = job(transport)
@@ -266,7 +266,7 @@ export const withDevice =
               catchError(errorRemapping),
               transportFinally(() => {
                 // Closes the transport and cleans up everything
-                return finalize(transport, [unlockQueuedJob]);
+                return finalize(transport, [resolveQueuedJob]);
               }),
             )
             .subscribe({
