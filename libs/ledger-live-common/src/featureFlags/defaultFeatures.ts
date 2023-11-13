@@ -178,6 +178,15 @@ export const DEFAULT_FEATURES: Features = {
           supportLinkURI: "https://support.ledger.com",
         },
       },
+      onboardingState: {
+        recoverAccountCreated: {
+          title: "Ledger recover",
+          description: "You are few steps away peace of mind!",
+          linkContent: "Finish your onboarding",
+          redirectTo: "account",
+          image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmedium.com%2F%40cryptomaton%2Fledger-delays-recovery-but-leaves-more-questions-unanswered-aea60f7a1b34&psig=AOvVaw2paMa9kNm5HvoHU0mpGHdo&ust=1699950498021000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCODe5aHHwIIDFQAAAAAdAAAAABAD"
+        },
+      },
       openRecoverFromSidebar: true,
       protectId: "protect-simu",
     },

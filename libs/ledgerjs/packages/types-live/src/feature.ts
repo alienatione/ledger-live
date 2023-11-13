@@ -350,6 +350,15 @@ export type Feature_ProtectServicesDesktop = Feature<{
     homeURI: string;
     loginURI: string;
   };
+  onboardingState: {
+    recoverAccountCreated: {
+      title: string;
+      description: string;
+      linkContent: string;
+      redirectTo: string;
+      image: string;
+    };
+  };
   protectId: string;
 }>;
 

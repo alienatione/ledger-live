@@ -29,6 +29,8 @@ import CurrencyDownStatusAlert from "~/renderer/components/CurrencyDownStatusAle
 import PostOnboardingHubBanner from "~/renderer/components/PostOnboardingHub/PostOnboardingHubBanner";
 import FeaturedButtons from "~/renderer/screens/dashboard/FeaturedButtons";
 import { AccountLike, Operation } from "@ledgerhq/types-live";
+import { Text } from "@ledgerhq/react-ui";
+import RecoverBanner from "./RecoverBanner";
 
 // This forces only one visible top banner at a time
 export const TopBannerContainer = styled.div`
@@ -48,6 +50,7 @@ export default function DashboardPage() {
   const hasInstalledApps = useSelector(hasInstalledAppsSelector);
   const totalAccounts = accounts.length;
   const portfolioExchangeBanner = useFeature("portfolioExchangeBanner");
+  const recoverService = useFeature("protectServicesDesktop");
   const totalCurrencies = useMemo(() => uniq(accounts.map(a => a.currency.id)).length, [accounts]);
   const totalOperations = useMemo(
     () => accounts.reduce((sum, a) => sum + a.operations.length, 0),
@@ -83,6 +86,7 @@ export default function DashboardPage() {
       {showCarousel ? <Carousel /> : null}
       {isPostOnboardingBannerVisible && <PostOnboardingHubBanner />}
       <FeaturedButtons />
+      <RecoverBanner { ...recoverService.onboardingState.recoverAccountCreated } />
       <TrackPage
         category="Portfolio"
         totalAccounts={totalAccounts}
