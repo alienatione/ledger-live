@@ -190,6 +190,11 @@ export default function Default() {
   useFetchCurrencyFrom();
   const discoverDB = useDiscoverDB();
 
+  useEffect(() => {
+    localStorage.removeItem("discoverSearchInput");
+    localStorage.removeItem("discoverSelectedCategory");
+  }, [])
+
   const listAppsV2 = useFeature("listAppsV2minor1");
   useEffect(() => {
     if (!listAppsV2) return;
