@@ -4,19 +4,27 @@ import { useHistory } from "react-router-dom";
 import Image from "~/renderer/components/Image";
 import { useFeature } from "@ledgerhq/live-common/featureFlags/index";
 import { RecoverBanner } from "@ledgerhq/types-live";
-import { getStoreValue } from "~/renderer/store";
+import { getStoreValue, setStoreValue } from "~/renderer/store";
 import { useCustomPath } from "@ledgerhq/live-common/hooks/recoverFeatureFlag";
 
 export default function RecoverBannerNotification() {
   const [storageData, setStorageData] = useState<string>();
+  const [displayBannerData, setDisplayBannerData] = useState<boolean>();
   const history = useHistory();
   const recoverService = useFeature("protectServicesDesktop");
-  const recoverPath = useCustomPath(recoverService, "account", "lld-recover-banner");
+  const recoverPath = useCustomPath(
+    recoverService,
+    "activate",
+    "lld-recover-banner",
+    "recover-launch",
+  );
   const protectID = recoverService?.params?.protectId ?? "";
 
   const getStorageSubscriptionState = useCallback(async () => {
     const storage = await getStoreValue("SUBSCRIPTION_STATE", protectID);
+    const displayBanner = await getStoreValue("DISPLAY_BANNER", protectID);
     setStorageData(storage as string);
+    setDisplayBannerData(displayBanner === "true");
   }, [protectID]);
 
   const recoverBannerSelected: RecoverBanner | undefined = useMemo(() => {
@@ -43,14 +51,15 @@ export default function RecoverBannerNotification() {
   };
 
   const onCloseBanner = () => {
-    console.log("CLOSE BANNER");
+    setStoreValue("DISPLAY_BANNER", "false", protectID);
+    setDisplayBannerData(false);
   };
 
   useEffect(() => {
     getStorageSubscriptionState();
   }, [getStorageSubscriptionState]);
 
-  if (!recoverBannerSelected) return null;
+  if (!recoverBannerSelected || !displayBannerData) return null;
 
   return (
     <Flex justifyContent="center">
@@ -67,7 +76,7 @@ export default function RecoverBannerNotification() {
       >
         <Flex flexDirection="column" p={3}>
           <Text color="text.shade100" ff="Inter|Light" uppercase>
-            {recoverBannerSelected.title}
+            {recoverBannerSelected?.title}
           </Text>
           <Text flex={1} mt={1} whiteSpace="pre-wrap" variant="small">
             {recoverBannerSelected.description}
@@ -104,6 +113,9 @@ export default function RecoverBannerNotification() {
           pt="5px"
           pr="6px"
           onClick={() => onCloseBanner()}
+          style={{
+            cursor: "pointer",
+          }}
         >
           <Icon name="Close" />
         </Box>
