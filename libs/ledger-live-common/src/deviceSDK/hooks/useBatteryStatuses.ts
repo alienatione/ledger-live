@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { log } from "@ledgerhq/logs";
 import { BatteryStatusFlags } from "@ledgerhq/types-devices";
-import { StatusCodes } from "@ledgerhq/errors";
 
 import {
   getBatteryStatusesAction,

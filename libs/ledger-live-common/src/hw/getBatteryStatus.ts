@@ -1,7 +1,7 @@
 import Transport from "@ledgerhq/hw-transport";
 import { BatteryStatusFlags, ChargingModes } from "@ledgerhq/types-devices";
 import { TransportStatusError, StatusCodes } from "@ledgerhq/errors";
-import { LocalTracer, trace } from "@ledgerhq/logs";
+import { LocalTracer } from "@ledgerhq/logs";
 
 export enum BatteryStatusTypes {
   BATTERY_PERCENTAGE = 0x00,
