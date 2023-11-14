@@ -794,10 +794,17 @@ export function useCategories(): Categories {
   );
   const { categories, manifestsByCategories } = useCategoriesRaw(searchable);
   const [selected, setSelected] = useState(DISCOVER_INITIAL_CATEGORY);
+  const initialCategory = localStorage.getItem("discoverSelectedCategory") || DISCOVER_INITIAL_CATEGORY
+  const [selected, setSelected] = useState(initialCategory);
 
   const reset = useCallback(() => {
     setSelected(DISCOVER_INITIAL_CATEGORY);
   }, []);
+
+  const setSelectedSaveToLS = (selected) => {
+    localStorage.setItem("discoverSelectedCategory", selected)
+    setSelected(selected)
+  }
 
   return useMemo(
     () => ({
@@ -810,7 +817,7 @@ export function useCategories(): Categories {
       categories,
       manifestsByCategories,
       selected,
-      setSelected,
+      setSelected: setSelectedSaveToLS,
       reset,
     }),
     [all, complete, searchable, categories, manifestsByCategories, selected, setSelected, reset],

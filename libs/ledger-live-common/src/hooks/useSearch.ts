@@ -16,7 +16,8 @@ export function useSearch<Item, T extends TextInput | undefined = undefined>({
   const inputRef = useRef<T>(null);
   const [isActive, setIsActive] = useState(false);
 
-  const [input, setInput] = useState(defaultInput);
+  const itemInStorage = localStorage.getItem("discoverSearchInput")
+  const [input, setInput] = useState(itemInStorage || defaultInput);
   const debouncedInput = useDebounce(input, 500);
 
   const [isSearching, setIsSearching] = useState(false);
@@ -39,7 +40,7 @@ export function useSearch<Item, T extends TextInput | undefined = undefined>({
     } else {
       setResult([]);
     }
-
+    localStorage.setItem("discoverSearchInput", debouncedInput);
     setIsSearching(false);
   }, [debouncedInput]);
 
