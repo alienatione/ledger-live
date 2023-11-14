@@ -15,7 +15,7 @@ export default function RecoverBannerNotification() {
   const protectID = recoverService?.params?.protectId ?? "";
 
   const getStorageSubscriptionState = useCallback(async () => {
-    const storage = await getStoreValue(protectID, "STARGATE_SUBSCRIBE");
+    const storage = await getStoreValue("SUBSCRIPTION_STATE", protectID);
     setStorageData(storage as string);
   }, [protectID]);
 
