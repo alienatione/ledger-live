@@ -36,7 +36,7 @@ const getBatteryStatus = async <StatusesType extends ReadonlyArray<BatteryStatus
   transport: Transport,
   statuses: StatusesType,
 ): Promise<BatteryStatusTuple<StatusesType>> => {
-  const tracer = new LocalTracer("hw", { status, statuses });
+  const tracer = new LocalTracer("hw", { statuses });
   tracer.trace(`Starting`);
 
   const result: (BatteryStatusFlags | number)[] = [];
@@ -46,7 +46,7 @@ const getBatteryStatus = async <StatusesType extends ReadonlyArray<BatteryStatus
     const status = res.readUInt16BE(res.length - 2);
 
     if (status !== StatusCodes.OK) {
-      tracer.trace(`Error: status ${status}`, { status, statuses, res });
+      tracer.trace(`Error: status ${status}`, { status, res });
       throw new TransportStatusError(status);
     }
 
