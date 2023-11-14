@@ -22,6 +22,7 @@ export function getCryptoCurrencyIcon(currency: CryptoCurrency): Icon | null | u
   return icons[getCurrencyIconId(currency)] || icons[getTickerIconId(currency)];
 }
 export function getTokenCurrencyIcon(token: TokenCurrency): Icon | null | undefined {
+  // TODO: remove the deprecated usage of disableCountervalue. it shouldn't drive the icons once it's mapped by id.
   return token.disableCountervalue ? null : icons[getTickerIconId(token)];
 }
 export function getFlag(countryCode: string): Icon | undefined {
