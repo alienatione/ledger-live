@@ -151,6 +151,7 @@ export const DEFAULT_FEATURES: Features = {
     enabled: false,
     params: {
       availableOnDesktop: false,
+      ledgerliveStorageState: false,
       account: {
         homeURI:
           "ledgerlive://recover/protect-simu?redirectTo=account&source=lld-sidebar-navigation&ajs_recover_source=lld-sidebar-navigation&ajs_recover_campaign=recover-launch",
@@ -158,6 +159,7 @@ export const DEFAULT_FEATURES: Features = {
           "ledgerlive://recover/protect-simu?redirectTo=login&source=lld-welcome-login&ajs_recover_source=lld-welcome-login&ajs_recover_campaign=recover-launch",
       },
       compatibleDevices: [],
+      recoverBanner: [],
       discoverTheBenefitsLink: "https://www.ledger.com/recover",
       onboardingCompleted: {
         alreadySubscribedURI: "ledgerlive://recover/protect-simu?redirectTo=login",
@@ -176,15 +178,6 @@ export const DEFAULT_FEATURES: Features = {
           manualStepsURI:
             "https://support.ledger.com/hc/en-us/articles/360013349800-Update-Ledger-Nano-X-firmware?docs=true",
           supportLinkURI: "https://support.ledger.com",
-        },
-      },
-      onboardingState: {
-        recoverAccountCreated: {
-          title: "Ledger recover",
-          description: "You are few steps away peace of mind!",
-          linkContent: "Finish your onboarding",
-          redirectTo: "account",
-          image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmedium.com%2F%40cryptomaton%2Fledger-delays-recovery-but-leaves-more-questions-unanswered-aea60f7a1b34&psig=AOvVaw2paMa9kNm5HvoHU0mpGHdo&ust=1699950498021000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCODe5aHHwIIDFQAAAAAdAAAAABAD"
         },
       },
       openRecoverFromSidebar: true,

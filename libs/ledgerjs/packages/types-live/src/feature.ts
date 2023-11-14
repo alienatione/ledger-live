@@ -301,6 +301,15 @@ export type CompatibleDevice = {
   name: string;
 };
 
+export type RecoverBanner = {
+  key: string;
+  title: string;
+  description: string;
+  linkContent: string;
+  redirectTo: string;
+  image: string;
+};
+
 export type Feature_ProtectServicesMobile = Feature<{
   deeplink: string;
   compatibleDevices: CompatibleDevice[];
@@ -331,7 +340,9 @@ export type Feature_ProtectServicesDesktop = Feature<{
   availableOnDesktop: boolean;
   openRecoverFromSidebar: boolean;
   discoverTheBenefitsLink: string;
+  ledgerliveStorageState: boolean;
   compatibleDevices: CompatibleDevice[];
+  recoverBanner: RecoverBanner[];
   onboardingRestore: {
     restoreInfoDrawer: {
       enabled: boolean;
@@ -349,15 +360,6 @@ export type Feature_ProtectServicesDesktop = Feature<{
   account: {
     homeURI: string;
     loginURI: string;
-  };
-  onboardingState: {
-    recoverAccountCreated: {
-      title: string;
-      description: string;
-      linkContent: string;
-      redirectTo: string;
-      image: string;
-    };
   };
   protectId: string;
 }>;
