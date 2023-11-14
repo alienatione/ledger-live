@@ -306,7 +306,6 @@ export type RecoverBanner = {
   title: string;
   description: string;
   linkContent: string;
-  redirectTo: string;
   image: string;
 };
 
