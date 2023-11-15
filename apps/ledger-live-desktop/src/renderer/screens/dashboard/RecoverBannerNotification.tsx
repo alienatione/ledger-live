@@ -12,10 +12,10 @@ export default function RecoverBannerNotification() {
   const [displayBannerData, setDisplayBannerData] = useState<boolean>();
   const history = useHistory();
   const recoverService = useFeature("protectServicesDesktop");
-  const recoverPath = useCustomPath(
+  const recoverUnfinishedOnboardingPath = useCustomPath(
     recoverService,
     "activate",
-    "lld-recover-banner",
+    "lld-banner-unfinished-onboarding",
     "recover-launch",
   );
   const protectID = recoverService?.params?.protectId ?? "";
@@ -47,7 +47,7 @@ export default function RecoverBannerNotification() {
   }, [recoverService?.params?.recoverBanner, storageData]);
 
   const onRedirectRecover = () => {
-    if (recoverPath) history.push(recoverPath);
+    if (recoverUnfinishedOnboardingPath) history.push(recoverUnfinishedOnboardingPath);
   };
 
   const onCloseBanner = () => {
