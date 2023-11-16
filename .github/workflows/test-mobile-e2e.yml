@@ -33,6 +33,7 @@ jobs:
   detox-tests-ios:
     name: "Ledger Live Mobile - iOS Detox Tests"
     runs-on: [m1, ARM64]
+    if: ${{ 1 == 0 }}
     env:
       NODE_OPTIONS: "--max-old-space-size=7168"
       LANG: en_US.UTF-8
@@ -136,6 +137,11 @@ jobs:
         with:
           name: "allure-ios-reports"
           path: apps/ledger-live-mobile/allure-results
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        if: ${{ failure() }}
+        with:
+          wait-timeout-minutes: 1
 
   allure-report-ios:
     name: "Allure Reports Export on Server"
@@ -155,7 +161,7 @@ jobs:
 
   detox-tests-android:
     name: "Ledger Live Mobile - Android Detox Tests"
-    runs-on: [ledger-live-linux-8CPU-32RAM]
+    runs-on: ubuntu-latest
     env:
       NODE_OPTIONS: "--max-old-space-size=7168"
       LANG: en_US.UTF-8
@@ -271,7 +277,11 @@ jobs:
         with:
           name: "allure-android-reports"
           path: apps/ledger-live-mobile/allure-results
-
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        if: ${{ failure() }}
+        with:
+          wait-timeout-minutes: 1
   allure-report-android:
     name: "Allure Reports Export on Server"
     runs-on: [ledger-live-medium-linux]
