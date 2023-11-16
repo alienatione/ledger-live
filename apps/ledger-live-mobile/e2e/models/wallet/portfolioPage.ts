@@ -23,6 +23,7 @@ export default class PortfolioPage {
   sendTransferMenuButton = () => getElementById("transfer-send-button");
   sendMenuButton = () => getElementById("send-button");
   marketTabButton = () => getElementById("tab-bar-market");
+  walletTabMarket = () => getElementById("wallet-tab-Market");
   earnButton = () => getElementById("tab-bar-earn");
 
   navigateToSettings() {
@@ -74,6 +75,10 @@ export default class PortfolioPage {
 
   openMarketPage() {
     return tapByElement(this.marketTabButton());
+  }
+
+  openWalletTabMarket() {
+    return tapByElement(this.walletTabMarket());
   }
 
   openMyLedger() {
