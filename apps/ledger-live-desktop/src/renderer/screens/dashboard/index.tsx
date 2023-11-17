@@ -83,9 +83,9 @@ export default function DashboardPage() {
         <CurrencyDownStatusAlert currencies={currencies} hideStatusIncidents />
       </TopBannerContainer>
       {showCarousel ? <Carousel /> : null}
+      {recoverService?.params?.ledgerliveStorageState ? <RecoverBannerNotification /> : null}
       {isPostOnboardingBannerVisible && <PostOnboardingHubBanner />}
       <FeaturedButtons />
-      {recoverService?.params?.ledgerliveStorageState ? <RecoverBannerNotification /> : null}
       <TrackPage
         category="Portfolio"
         totalAccounts={totalAccounts}

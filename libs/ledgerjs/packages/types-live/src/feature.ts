@@ -302,11 +302,10 @@ export type CompatibleDevice = {
 };
 
 export type RecoverBanner = {
-  key: string;
   title: string;
   description: string;
-  linkContent: string;
-  image: string;
+  primaryCta: string;
+  secondaryCta?: string;
 };
 
 export type Feature_ProtectServicesMobile = Feature<{
@@ -341,7 +340,6 @@ export type Feature_ProtectServicesDesktop = Feature<{
   discoverTheBenefitsLink: string;
   ledgerliveStorageState: boolean;
   compatibleDevices: CompatibleDevice[];
-  recoverBanner: RecoverBanner[];
   onboardingRestore: {
     restoreInfoDrawer: {
       enabled: boolean;

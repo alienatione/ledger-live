@@ -1,16 +1,21 @@
-import { Box, Flex, Icon, Link, Text } from "@ledgerhq/react-ui";
+import { Flex, ProgressLoader, Text } from "@ledgerhq/react-ui";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Image from "~/renderer/components/Image";
 import { useFeature } from "@ledgerhq/live-common/featureFlags/index";
 import { RecoverBanner } from "@ledgerhq/types-live";
 import { getStoreValue, setStoreValue } from "~/renderer/store";
 import { useCustomPath } from "@ledgerhq/live-common/hooks/recoverFeatureFlag";
+import { useTranslation } from "react-i18next";
+import Button from "~/renderer/components/ButtonV3";
+import { useTheme } from "styled-components";
 
 export default function RecoverBannerNotification() {
   const [storageData, setStorageData] = useState<string>();
   const [displayBannerData, setDisplayBannerData] = useState<boolean>();
+  const [stepNumber, setStepNumber] = useState<number>(0);
+  const { t } = useTranslation();
   const history = useHistory();
+  const { colors } = useTheme();
   const recoverService = useFeature("protectServicesDesktop");
   const recoverUnfinishedOnboardingPath = useCustomPath(
     recoverService,
@@ -18,7 +23,9 @@ export default function RecoverBannerNotification() {
     "lld-banner-unfinished-onboarding",
     "recover-launch",
   );
+
   const protectID = recoverService?.params?.protectId ?? "";
+  const maxStepNumber = 5;
 
   const getStorageSubscriptionState = useCallback(async () => {
     const storage = await getStoreValue("SUBSCRIPTION_STATE", protectID);
@@ -28,23 +35,37 @@ export default function RecoverBannerNotification() {
   }, [protectID]);
 
   const recoverBannerSelected: RecoverBanner | undefined = useMemo(() => {
-    const recoverBannerDatas: RecoverBanner[] = recoverService?.params?.recoverBanner ?? [];
+    let recoverBannerWording: RecoverBanner;
 
     switch (storageData) {
       case "NO_SUBSCRIPTION":
+        setStepNumber(1);
         return undefined;
       case "STARGATE_SUBSCRIBE":
-        return recoverBannerDatas.find(item => item.key === "subscription_done");
+        setStepNumber(2);
+        recoverBannerWording = t("dashboard.recoverBanner.subscribeDone", { returnObjects: true });
+        break;
       case "BACKUP_VERIFY_IDENTITY":
-        return recoverBannerDatas.find(item => item.key === "subscription_done");
+        setStepNumber(3);
+        recoverBannerWording = t("dashboard.recoverBanner.verifyIdentity", { returnObjects: true });
+        break;
       case "BACKUP_DEVICE_CONNECTION":
-        return recoverBannerDatas.find(item => item.key === "subscription_done");
+        setStepNumber(4);
+        recoverBannerWording = t("dashboard.recoverBanner.connectDevice", { returnObjects: true });
+        break;
       case "BACKUP_DONE":
+        setStepNumber(5);
         return undefined;
       default:
+        setStepNumber(0);
         return undefined;
     }
-  }, [recoverService?.params?.recoverBanner, storageData]);
+
+    if (recoverBannerWording) {
+      recoverBannerWording.title = t("dashboard.recoverBanner.title");
+      return recoverBannerWording;
+    }
+  }, [storageData, t]);
 
   const onRedirectRecover = () => {
     if (recoverUnfinishedOnboardingPath) history.push(recoverUnfinishedOnboardingPath);
@@ -62,63 +83,67 @@ export default function RecoverBannerNotification() {
   if (!recoverBannerSelected || !displayBannerData) return null;
 
   return (
-    <Flex justifyContent="center">
+    <Flex justifyContent="center" mb={20}>
       <Flex
         position="relative"
         columnGap={3}
-        bg="palette.background.paper"
+        bg={colors.opacityPurple.c10}
         justifyContent="space-between"
-        mb={40}
-        borderRadius={10}
+        borderRadius="8px"
         overflow="hidden"
-        maxWidth="700px"
         width="100%"
       >
-        <Flex flexDirection="column" p={3}>
-          <Text color="text.shade100" ff="Inter|Light" uppercase>
-            {recoverBannerSelected?.title}
+        <Flex alignItems="center" justifyContent="center" p={3} width={68}>
+          <ProgressLoader
+            progress={(stepNumber * 100) / maxStepNumber}
+            radius={20}
+            stroke={4}
+            showPercentage={false}
+          />
+          <Text
+            display="block"
+            flex={1}
+            textAlign="center"
+            fontSize="12px"
+            lineHeight="15px"
+            fontWeight="extraLight"
+          >
+            {`${stepNumber}/${maxStepNumber}`}
           </Text>
-          <Text flex={1} mt={1} whiteSpace="pre-wrap" variant="small">
+        </Flex>
+        <Flex flex={1} flexDirection="column" py={3} overflow="hidden">
+          <Text
+            ff="Inter|Regular"
+            fontSize="13px"
+            lineHeight="16px"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            width="100%"
+            overflow="hidden"
+          >
+            {recoverBannerSelected.title}
+          </Text>
+          <Text
+            mt={1}
+            fontSize="12px"
+            lineHeight="15px"
+            fontWeight="extraLight"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            width="100%"
+            overflow="hidden"
+          >
             {recoverBannerSelected.description}
           </Text>
-          <Box>
-            <Link
-              size="small"
-              type="color"
-              color="primary.c80"
-              mr={8}
-              onClick={() => onRedirectRecover()}
-              iconPosition="right"
-              Icon={() => <Icon name="ArrowRight" />}
-            >
-              {recoverBannerSelected.linkContent}
-            </Link>
-          </Box>
         </Flex>
-        <Box height="150px">
-          <Image
-            resource={recoverBannerSelected.image}
-            alt={recoverBannerSelected.title}
-            width="auto"
-            style={{
-              objectFit: "cover",
-              height: "100%",
-            }}
-          />
-        </Box>
-        <Box
-          position="absolute"
-          top={0}
-          right={0}
-          pt="5px"
-          pr="6px"
-          onClick={() => onCloseBanner()}
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          <Icon name="Close" />
-        </Box>
+        <Flex alignItems="center" p={3} pl={0} columnGap={3}>
+          <Button outline={false} onClick={onCloseBanner}>
+            {recoverBannerSelected.secondaryCta}
+          </Button>
+          <Button variant="main" outline={false} onClick={onRedirectRecover}>
+            {recoverBannerSelected.primaryCta}
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );
